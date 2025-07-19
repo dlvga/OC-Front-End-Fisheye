@@ -10,21 +10,27 @@ export class PhotographerTemplate {
     }
 
     _createProfilePhoto(data) {
-        const figure = document.createElement('figure');
-        figure.className = 'profile-photo-block';
+        const figure = createElement('figure',
+            {
+                className: 'profile-photo-block',
+            });
 
         const photoDiv = createElement('div', { className: 'profile-photo' });
+        const nameEl = createElement('h2', {
+            text: data.name,
+            attrs: { id: `${data.id}-name` }
+        });
 
         const img = createElement('img', {
             attrs: {
                 src: data.profilePicture,
-                alt: `Portrait de ${data.name}`,
-                tabindex: '0',
+                //tabindex: '0',
                 role: 'img'
             }
         });
 
         photoDiv.appendChild(img);
+        photoDiv.appendChild(nameEl);
         figure.appendChild(photoDiv);
 
         const figcaption = createElement('figcaption', {
@@ -33,7 +39,15 @@ export class PhotographerTemplate {
         });
 
         figure.appendChild(figcaption);
-        return figure;
+        const profileLink = createElement('a', {
+            className: 'profile-link',
+            attrs: {
+                href: `photographer.html?id=${data.id}`,
+                'aria-label': `Voir le profil de ${data.name}`,
+                tabindex: '0'
+            } });
+        profileLink.appendChild(figure);
+        return profileLink;
     }
 
     _createProfileInfo({ id, name, location, tagline, price }) {
@@ -42,27 +56,25 @@ export class PhotographerTemplate {
             attrs: { 'aria-labelledby': `${id}-name` }
         });
 
-        const nameEl = createElement('h2', {
-            text: name,
-            attrs: { id: `${id}-name`, tabindex: '0' }
-        });
-
         const locationEl = createElement('p', {
             className: 'location',
-            text: location
+            text: location,
+            //attrs: { tabindex: '0' }
         });
 
         const quoteEl = createElement('p', {
             className: 'quote',
-            text: tagline
+            text: tagline,
+            // attrs: { tabindex: '0' }
         });
 
         const rateEl = createElement('p', {
             className: 'rate',
-            text: price
+            text: price,
+            //attrs: { tabindex: '0' }
         });
 
-        infoSection.append(nameEl, locationEl, quoteEl, rateEl);
+        infoSection.append(locationEl, quoteEl, rateEl);
         return infoSection;
     }
 
@@ -72,18 +84,14 @@ export class PhotographerTemplate {
         const article = createElement('article', {
             className: 'profile-card',
             attrs: {
-                tabindex: '0',
-                role: 'region',
-                'aria-label': `Profil du photographe ${data.name}`
+                //tabindex: '0',
+                role: 'region'
             }
         });
 
         article.appendChild(this._createProfilePhoto(data));
         article.appendChild(this._createProfileInfo(data));
 
-        const profileLink = createElement('a', {className: 'profile-link', attrs: { href: `photographer.html?id=${data.id}` } });
-        profileLink.appendChild(article);
-
-        return profileLink;
+        return article;
     }
 }
