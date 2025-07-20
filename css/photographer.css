@@ -2,10 +2,35 @@
     display: none;
 }
 
-.photograph-header {
+.photographer-header {
     background-color: #FAFAFA;
     height: 300px;
     margin: 0 100px;
+    display: flex;
+}
+
+.photographer-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.photographer-title {
+    color: #D3573C;
+    font-size: 36px;
+    margin: 0;
+}
+
+.photographer-location {
+    font-size: 1.1rem;
+    color: #8e3b33;
+}
+
+.photographer-tagline {
+    margin: 0.5rem 0;
+    color: #444;
 }
 
 .contact_button {

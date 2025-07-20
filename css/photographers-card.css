@@ -7,10 +7,20 @@
     margin: 0;
 }
 
+.profile-photo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .profile-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.profile-photo h2 {
+    margin: 1rem 0 0;
 }
 
 .profile-info h2 {

@@ -15,3 +15,13 @@ export async function getPhotographers(container) {
         return [];
     }
 }
+
+export async function getPhotographer(id) {
+    const dataService = new DataService();
+    await dataService.fetchData();
+    const photographer = dataService.getPhotographerById(parseInt(id));
+    if (!photographer) {
+        throw new Error("Photographe non trouvé");
+    }
+    return photographer;
+}

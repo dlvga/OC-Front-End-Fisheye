@@ -12,7 +12,7 @@ export function displayPhotographers(photographers, container) {
     photographers.forEach(data => {
         const photographer = new Photographer(data);
         const template = new PhotographerTemplate(photographer);
-        const card = template.render();
+        const card = template.renderPhotographersCard();
         container.appendChild(card);
     });
 }
