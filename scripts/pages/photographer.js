@@ -4,11 +4,15 @@ import { displayError } from '../utils/displayError.js';
 import {getPhotographer} from "../services/photographerService.js";
 import {displayPhotographer} from "../ui/displayPhotographer.js";
 import Photographer from "../models/Photographer.js";
+import {getPhotographerMedia} from "../services/mediaService";
+import MediaFactory from "../factories/MediaFactory";
+import {displayMedia} from "../ui/displayMedia";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const photographerId = new URLSearchParams(window.location.search).get('id');
     const photographerSection = document.querySelector('.photographer-header');
     const errorContainer = document.querySelector('#error-container');
+    const mediaSection = document.querySelector('.photographer-media');
 
     if (!photographerId) {
         displayError(errorContainer, "Aucun ID de photographe fourni.");
@@ -19,6 +23,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const photographerData = await getPhotographer(photographerId);
         const photographerModel = new Photographer(photographerData);
         displayPhotographer(photographerModel, photographerSection);
+        const photographerMedia = getPhotographerMedia(photographerModel._id);
+        photographerMedia.forEach((media) => {
+            const mediaModel = new MediaFactory(media);
+            //displayMedia(mediaModel, mediaSection);
+        })
     } catch (error) {
         console.error("Erreur lors de la récupération du photographe :", error);
         displayError(errorContainer, error);
