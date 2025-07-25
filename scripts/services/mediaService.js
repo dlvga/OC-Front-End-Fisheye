@@ -1,4 +1,4 @@
-import DataService from "./DataService";
+import DataService from "./DataService.js";
 
 export async function getPhotographerMedia(id) {
     const dataService = new DataService();

@@ -1,6 +1,7 @@
 @import url("photographer.css");
 @import url('error.css');
 @import url('photographers-card.css');
+@import url('media.css');
 
 .sr-only {
     position: absolute;
@@ -56,7 +57,7 @@ h1 {
     text-align: center;
 }
 
-.photographer_section, .photographer-header article img {
+.photographer_section article img, .photographer-header article img {
     border-radius: 50%;
     height: 200px;
     width: 200px;

@@ -1,14 +1,17 @@
 import {displayError} from "../utils/displayError.js";
+import MediaFactory from "../factories/MediaFactory.js";
+import {MediaTemplate} from "../templates/MediaTemplate.js";
 
-export function displayMedia(media, container) {
-    container.innerHTML = '';
-    if (photographer.length === 0) {
-        displayError(container, "Aucun photographe à afficher.");
+export function displayMedia(photographerMedia, container) {
+    //container.innerHTML = '';
+    if (photographerMedia.length === 0) {
+        displayError(container, "Aucun media à afficher.");
         return;
     }
-    const section = document.querySelector('.photographer-header');
-    section.setAttribute('aria-label', 'Profil du photographe');
-    const template = new PhotographerTemplate(photographer);
-    const article = template.renderPhotographerHeader();
-    container.appendChild(article);
+    photographerMedia.forEach((media) => {
+        const mediaModel = new MediaFactory(media);
+        const template = new MediaTemplate(mediaModel);
+        const card = template._createMediaCard();
+        container.appendChild(card);
+    })
 }
