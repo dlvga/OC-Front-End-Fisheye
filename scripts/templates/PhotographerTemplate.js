@@ -98,23 +98,18 @@ export class PhotographerTemplate {
 // Photographer header creation
 
     _createContactButton() {
-        const button = createElement('button', {
+        return createElement('button', {
             className: 'contact_button',
             text: 'Contactez-moi',
             attrs: {
-                'aria-label': 'Contact me'
+                'aria-label': 'Contact me',
+                id: 'contact-button'
             }
         });
-
-        button.addEventListener('click', () => {
-            document.getElementById('contact_modal').style.display = 'block';
-        });
-
-        return button;
     }
 
     _createPhotographerInfo(photographer) {
-        const nom = createElement('h1', { className:'photographer-title', text: photographer.name });
+        const nom = createElement('h2', { className:'photographer-title', text: photographer.name });
 
         const localisation = createElement('p', {
             className: 'photographer-location',
@@ -141,13 +136,6 @@ export class PhotographerTemplate {
         });
     }
 
-    _closeContactModal() {
-        const closeBtn = document.querySelector('#contact_modal img[alt="Fermer fenêtre de contact"]');
-        closeBtn.addEventListener('click', () => {
-            document.getElementById('contact_modal').style.display = 'none';
-        });
-    }
-
     renderPhotographerHeader() {
         const photographer = this.photographer.getProfileData();
 
@@ -158,7 +146,6 @@ export class PhotographerTemplate {
         const portrait = this._createPhotographerImage(photographer);
 
         article.append(info, contactButton, portrait);
-        this._closeContactModal();
         
         return article;
     }

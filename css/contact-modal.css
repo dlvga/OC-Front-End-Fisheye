@@ -1,0 +1,174 @@
+/* ============================
+   CONTACT MODAL STYLES
+   ============================ */
+
+.modal {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    width: 90%;
+    max-width: 450px;
+    padding: 30px;
+    background: #DB8876;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+/* Header */
+.modal header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+#contact_modal_title {
+    margin: 5px 0 0;
+    font-size: 32px;
+    font-weight: normal;
+    color: #901C1C;
+}
+
+#contact_modal_title span {
+    display: block;
+    margin-top: 6px;
+    font-size: 32px;
+    font-weight: normal;
+    color: #901C1C;
+}
+
+/* Close button */
+.modal__close-btn {
+    background: none;
+    border: none;
+    font-size: 5rem;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
+
+.modal__close-btn:hover,
+.modal__close-btn:focus {
+    outline: 2px solid #901C1C;
+    outline-offset: 2px;
+}
+
+/* Form */
+.form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-field label {
+    margin-bottom: 6px;
+    font-size: 24px;
+    color: #312E2E;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: "DM Sans", sans-serif;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+input {
+    height: 50px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid #901C1C;
+    outline-offset: 2px;
+}
+
+input.error,
+textarea.error {
+    border: 2px solid #d32f2f;
+}
+
+.error-message {
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #d32f2f;
+    min-height: 18px;
+}
+
+/* Submit button */
+button[type="submit"] {
+    align-self: center;
+    min-width: 160px;
+    padding: 14px 36px;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    background: #901C1C;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background 0.2s, transform 0.1s;
+}
+
+button[type="submit"]:hover,
+button[type="submit"]:focus {
+    background: #D3573C;
+    transform: translateY(-2px) scale(1.03);
+    outline: 2px solid #901C1C;
+    outline-offset: 2px;
+}
+
+button[type="submit"]:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal {
+        top: 20px;
+        width: 95%;
+        padding: 20px;
+    }
+
+    .modal header .titles h1 {
+        font-size: 36px;
+    }
+    .modal header .titles h2 {
+        font-size: 24px;
+    }
+
+    .form-field label {
+        font-size: 20px;
+    }
+}

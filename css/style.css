@@ -2,6 +2,7 @@
 @import url('error.css');
 @import url('photographers-card.css');
 @import url('media.css');
+@import url('contact-modal.css');
 
 .sr-only {
     position: absolute;

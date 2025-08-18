@@ -1,6 +1,6 @@
-#contact_modal {
-    display: none;
-}
+/* ==========================================================================
+   PHOTOGRAPHER PAGE STYLES
+   ========================================================================== */
 
 .photographer-header {
     background-color: #FAFAFA;
@@ -44,58 +44,99 @@
     background-color: #901C1C;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.modal {
-    border-radius: 5px;
-    background-color: #DB8876;
-    width: 50%;
+.contact_button:hover,
+.contact_button:focus {
+    background-color: #D3573C;
+    transform: translateY(-1px);
+    outline: 2px solid #901C1C;
+    outline-offset: 2px;
+}
+
+/* ==========================================================================
+   PHOTOGRAPHER STATS (LIKES & PRICE)
+   ========================================================================== */
+
+.photographer-stats {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: #DB8876;
+    padding: 20px;
+    border-radius: 5px 5px 0 0;
+    width: 376px;
+    font-weight: bold;
+    z-index: 10;
+    margin-right: 30px;
+}
+
+.photographer-stats dl {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     justify-content: space-between;
-    padding: 35px;
-    margin: auto;
-}
-
-.modal header {
-    justify-content: space-between;
+    margin: 0;
+    padding: 0;
     width: 100%;
 }
 
-.modal header img {
-    cursor: pointer;
-}
-
-.modal header h2 {
-    font-size: 64px;
-    font-weight: normal;
-    text-align: center;
-}
-
-form {
+.photographer-stats .likes-count,
+.photographer-stats .photographer-price {
     display: flex;
-    width: 100%;
     flex-direction: column;
     align-items: flex-start;
+    margin: 0 20px 0 0;
 }
 
-form label {
-    color: #312E2E;
-    font-size: 36px;
+.photographer-stats .photographer-price {
+    margin-left: 20px;
+    font-size: 24px;
 }
 
-form div {
+.photographer-stats dt {
+    margin: 0;
+    padding: 0;
+}
+
+.photographer-stats dd {
+    margin: 0;
+    padding: 0;
     display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: self-start;
-    margin-bottom: 26px;
+    align-items: center;
+    gap: 5px;
 }
 
-form input {
-    width: 100%;
-    height: 68px;
-    border: none;
-    border-radius: 5px;
+#total-likes {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .photographer-header {
+        margin: 0 20px;
+        height: auto;
+        padding: 20px 0;
+    }
+
+    .photographer-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .photographer-title {
+        font-size: 28px;
+    }
+
+    .photographer-stats {
+        position: relative;
+        width: auto;
+        margin: 20px;
+        border-radius: 5px;
+    }
 }

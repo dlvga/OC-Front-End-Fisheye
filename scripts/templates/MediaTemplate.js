@@ -23,7 +23,6 @@ export class MediaTemplate {
             className: 'media-link',
             attrs: {
                 href: '#',
-                role: 'link',
                 'aria-label': `${this.media._title}, Ouvrir en plein écran`
             }
         });
@@ -42,7 +41,7 @@ export class MediaTemplate {
                 className: 'media-preview',
                 attrs: {
                     src: this.media.video,
-                    ariaLabel: `${this.media._title}`
+                    'aria-label': `${this.media._title}`
                 }
             });
         }
@@ -61,7 +60,7 @@ export class MediaTemplate {
             text: this.media._likes,
             attrs: {
                 class: 'likes-count',
-                'aria-label': 'nombre de likes'
+                'data-id': this.media._id // ← mapping par id
             }
         });
 

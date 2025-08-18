@@ -10,29 +10,205 @@
     <body>
         <header>
             <a href="index.html">
+                <!-- Alt text descriptif pour la navigation -->
                 <img src="assets/images/logo.png" class="logo" alt="Fisheye Home page"/>
+                <h1 class="sr-only">Fisheye</h1>
             </a>
         </header>
         <main id="main">
+            <!-- Sections dynamiquement remplies par JavaScript -->
             <section class="photographer-header"></section>
-            <section class="photographer-media"></section>
+            <section class="photographer-media">
+                <h2 class="sr-only">Galerie du photographe</h2>
+            </section>
         </main>
-        <div id="contact_modal">
-            <div class="modal">
-                <header>
-                    <h2>Contactez-moi</h2>
-                    <img src="assets/icons/close.svg" onclick="closeModal()" alt="Fermer fenêtre de contact"/>
-                </header>
-                <form>
-                    <div>
-                        <label>Prénom</label>
-                        <input/>
-                    </div>
-                    <button class="contact_button">Envoyer</button>
-                </form>
-            </div>
+
+        <!--
+        MODALE DE CONTACT - ACCESSIBILITÉ WCAG 2.1 AA
+        Structure conforme aux bonnes pratiques d'accessibilité :
+        - role="dialog" : Indique aux lecteurs d'écran que c'est une fenêtre de dialogue
+        - aria-modal="true" : Signale que le contenu en dehors est inerte
+        - aria-labelledby : Lie la modale à son titre pour l'identification
+        - aria-hidden="true" : État initial caché pour les technologies d'assistance
+        -->
+        <div id="contact_modal"
+               class="modal hidden"
+               role="dialog"
+               aria-modal="true"
+               aria-labelledby="contact_modal_title"
+               aria-hidden="true">
+            <header>
+                <!-- Titre de la modale identifié par aria-labelledby -->
+                <h2 id="contact_modal_title">
+                    Contactez-moi
+                    <span id="contact_modal_photographer_name"></span>
+                </h2>
+
+                <!--
+                BOUTON DE FERMETURE ACCESSIBLE
+                - aria-label : Description claire de l'action pour les lecteurs d'écran
+                - type="button" : Évite la soumission accidentelle du formulaire
+                - Styles CSS fournissent un focus visible (outline)
+                -->
+                <button id="close_modal_btn"
+                        class="modal__close-btn"
+                        aria-label="Fermer la fenêtre de contact"
+                        type="button">×
+                </button>
+            </header>
+
+            <!--
+            FORMULAIRE ACCESSIBLE
+            - novalidate : Désactive la validation HTML5 native pour contrôler les messages
+            - Validation JavaScript personnalisée avec aria-invalid et messages d'erreur
+            -->
+            <form id="contact_form" novalidate>
+                <!--
+                STRUCTURE DE CHAMP ACCESSIBLE
+                Chaque champ suit le pattern :
+                1. Label explicite lié au champ (for/id)
+                2. Champ avec attributs d'accessibilité
+                3. Zone de message d'erreur liée (aria-describedby)
+                -->
+                <div class="form-field">
+                    <!-- Label explicite - obligatoire pour l'accessibilité -->
+                    <label for="first_name">Prénom</label>
+
+                    <!--
+                    CHAMP INPUT ACCESSIBLE
+                    - required : Validation HTML5
+                    - aria-required="true" : Double déclaration pour les lecteurs d'écran
+                    - aria-describedby : Lie le champ à son message d'erreur
+                    -->
+                    <input id="first_name"
+                           name="first_name"
+                           type="text"
+                           required
+                           aria-required="true"
+                           aria-describedby="error_first_name" />
+
+                    <!--
+                    MESSAGE D'ERREUR ACCESSIBLE
+                    - role="alert" : Annonce immédiate du message d'erreur
+                    - aria-live="assertive" : Force l'interruption du lecteur d'écran
+                    - ID lié par aria-describedby pour association sémantique
+                    -->
+                    <span id="error_first_name"
+                          class="error-message"
+                          role="alert"
+                          aria-live="assertive"></span>
+                </div>
+
+                <!-- Même structure pour le nom -->
+                <div class="form-field">
+                    <label for="last_name">Nom</label>
+                    <input id="last_name"
+                           name="last_name"
+                           type="text"
+                           required
+                           aria-required="true"
+                           aria-describedby="error_last_name" />
+                    <span id="error_last_name"
+                          class="error-message"
+                          role="alert"
+                          aria-live="assertive"></span>
+                </div>
+
+                <!--
+                CHAMP EMAIL avec type spécifique
+                - type="email" : Validation native et clavier adapté sur mobile
+                -->
+                <div class="form-field">
+                    <label for="email">Email</label>
+                    <input id="email"
+                           name="email"
+                           type="email"
+                           required
+                           aria-required="true"
+                           aria-describedby="error_email" />
+                    <span id="error_email"
+                          class="error-message"
+                          role="alert"
+                          aria-live="assertive"></span>
+                </div>
+
+                <!--
+                TEXTAREA ACCESSIBLE
+                - Même attributs d'accessibilité que les inputs
+                - Pas de placeholder qui pourrait masquer le label
+                -->
+                <div class="form-field">
+                    <label for="message">Votre message</label>
+                    <textarea id="message"
+                              name="message"
+                              required
+                              aria-required="true"
+                              aria-describedby="error_message"></textarea>
+                    <span id="error_message"
+                          class="error-message"
+                          role="alert"
+                          aria-live="assertive"></span>
+                </div>
+
+                <!--
+                BOUTON DE SOUMISSION ACCESSIBLE
+                - aria-label : Description claire de l'action
+                - type="submit" : Comportement standard de soumission
+                - Gestion du focus et disabled state dans le CSS
+                -->
+                <button type="submit"
+                        aria-label="Envoyer le formulaire de contact">
+                    Envoyer
+                </button>
+            </form>
         </div>
+
+        <!--
+        CONTENEUR D'ANNONCES GLOBALES
+        - aria-live="assertive" : Pour les messages de confirmation/erreur globaux
+        - Placé hors de la modale pour éviter les conflits de focus
+        -->
         <div id="error-container" aria-live="assertive"></div>
+
+        <!--
+        STATISTIQUES DU PHOTOGRAPHE - ACCESSIBILITÉ SÉMANTIQUE
+        - aside : Contenu complémentaire sémantiquement distinct
+        - aria-label : Description du contenu pour les lecteurs d'écran
+        - Structure dl/dt/dd : Liste de définitions sémantiquement correcte
+        -->
+        <aside class="photographer-stats" aria-label="Statistiques du photographe">
+            <dl>
+                <!-- Groupe likes avec sémantique claire -->
+                <div class="likes-count">
+                    <dt>
+                        <!-- sr-only : Texte caché visuellement mais lu par les lecteurs d'écran -->
+                        <span class="sr-only">Nombre total de likes</span>
+                    </dt>
+                    <dd>
+                        <span id="total-likes">0</span>
+                        <!--
+                        ICÔNE ACCESSIBLE
+                        - alt="likes" : Description de l'icône
+                        - tabindex="0" : Rend l'icône focusable au clavier (questionnable)
+                        -->
+                        <img src="assets/icons/likes-black.svg" alt="likes" tabindex="0" />
+                    </dd>
+                </div>
+
+                <!-- Groupe prix avec structure similaire -->
+                <div class="photographer-price">
+                    <dt>
+                        <span class="sr-only">Tarif journalier</span>
+                    </dt>
+                    <dd>
+                        <span id="photographer-price">0</span> €/jour
+                    </dd>
+                </div>
+            </dl>
+        </aside>
+
+        <!-- Scripts modules pour l'interactivité -->
         <script type="module" src="scripts/pages/photographer.js"></script>
+        <script type="module" src="scripts/utils/contactForm.js"></script>
     </body>
 </html>

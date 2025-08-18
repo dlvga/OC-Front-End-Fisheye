@@ -53,6 +53,10 @@
     gap: 5px;
 }
 
+.likes img {
+    cursor: pointer;
+}
+
 .likes-count {
     font-size: 24px;
     font-weight: bold;
