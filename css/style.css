@@ -3,6 +3,7 @@
 @import url('photographers-card.css');
 @import url('media.css');
 @import url('contact-modal.css');
+@import url('lightbox.css');
 
 .sr-only {
     position: absolute;

@@ -207,6 +207,57 @@
             </dl>
         </aside>
 
+        <!-- LIGHTBOX STRUCTURE - Position optimale dans le DOM -->
+        <div id="lightbox-modal"
+             class="lightbox-modal"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="lightbox-title"
+             aria-hidden="true">
+
+            <!-- Overlay pour fermer au clic -->
+            <div class="lightbox-overlay"></div>
+
+            <!-- Contenu de la lightbox -->
+            <div class="lightbox-content">
+
+                <!-- Header avec bouton fermer -->
+                <div class="lightbox-header">
+                    <button class="lightbox-close"
+                            type="button"
+                            aria-label="Fermer la visionneuse">×</button>
+                </div>
+
+                <!-- Container pour le média (CONTENU DYNAMIQUE) -->
+                <div class="lightbox-media-container">
+                    <!-- Le média sera injecté ici dynamiquement -->
+                </div>
+
+                <!-- Navigation -->
+                <div class="lightbox-navigation">
+                    <button class="lightbox-prev"
+                            type="button"
+                            aria-label="Média précédent">
+                        <img src="assets/icons/arrowPrevLightBox.svg" alt="Précédent">
+                    </button>
+
+                    <button class="lightbox-next"
+                            type="button"
+                            aria-label="Média suivant">
+                        <img src="assets/icons/arrowNextLightBox.svg" alt="Suivant">
+                    </button>
+                </div>
+
+                <!-- Footer avec titre -->
+                <div class="lightbox-footer">
+                    <h2 id="lightbox-title" class="lightbox-title">
+                        <!-- Le titre sera mis à jour dynamiquement -->
+                    </h2>
+                </div>
+
+            </div>
+        </div>
+
         <!-- Scripts modules pour l'interactivité -->
         <script type="module" src="scripts/pages/photographer.js"></script>
         <script type="module" src="scripts/utils/contactForm.js"></script>

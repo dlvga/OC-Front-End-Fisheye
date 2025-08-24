@@ -2,8 +2,10 @@
 
 /**
  * Modale de contact accessible (focus management, trap focus, validation).
- * Conçu pour respecter les bonnes pratiques d’accessibilité
+ * Conçu pour respecter les bonnes pratiques d'accessibilité
  */
+
+import { createFocusTrap, focusElement, restoreFocus } from './focusTrap.js';
 
 const MODAL_ID = 'contact_modal';
 const NAME_SPAN_ID = 'contact_modal_photographer_name';
@@ -12,7 +14,7 @@ const CLOSE_BTN_ID = 'close_modal_btn';
 const FORM_ID = 'contact_form';
 
 let lastFocusedElement = null;
-let trapFocusHandler = null;
+let focusTrapCleanup = null;
 
 /**
  * Met à jour le nom du photographe dans le titre de la modale.
@@ -30,7 +32,7 @@ function updateModalTitle() {
 }
 
 /**
- * Alterne l’exposition du contenu hors modale via aria-hidden.
+ * Alterne l'exposition du contenu hors modale via aria-hidden.
  * Cible le header de page uniquement.
  * @param {boolean} hide - true pour masquer le contenu hors modale.
  */
@@ -65,10 +67,12 @@ function openModal(modal) {
     toggleMainContent(true);
     document.body.style.overflow = 'hidden';
 
-    const firstField = modal.querySelector('input, textarea, select, button');
-    if (firstField instanceof HTMLElement) firstField.focus();
+    // Focus direct sur le bouton close en utilisant l'utilitaire focusElement
+    focusElement(`#${CLOSE_BTN_ID}`, modal);
 
-    trapFocus(modal);
+    focusTrapCleanup = createFocusTrap(modal, {
+        onEscape: () => closeModal(modal)
+    });
 }
 
 /**
@@ -83,60 +87,18 @@ function closeModal(modal) {
     document.body.style.overflow = '';
     toggleMainContent(false);
 
-    if (trapFocusHandler) {
-        modal.removeEventListener('keydown', trapFocusHandler);
-        trapFocusHandler = null;
+    // Nettoyer le focus trap
+    if (focusTrapCleanup) {
+        focusTrapCleanup();
+        focusTrapCleanup = null;
     }
 
-    if (lastFocusedElement instanceof HTMLElement && document.contains(lastFocusedElement)) {
-        lastFocusedElement.focus();
-    }
+    // Restaurer le focus
+    restoreFocus(lastFocusedElement);
 }
 
 /**
- * Confine le focus dans la modale et permet la fermeture via Échap.
- * @param {HTMLElement} modal - Élément racine de la modale.
- */
-function trapFocus(modal) {
-    const selectors = [
-        'a[href]',
-        'button:not([disabled])',
-        'input:not([disabled])',
-        'textarea:not([disabled])',
-        'select:not([disabled])',
-        '[tabindex]:not([tabindex="-1"])'
-    ];
-    const focusable = Array.from(modal.querySelectorAll(selectors.join(',')));
-    if (!focusable.length) return;
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    /**
-     * @param {KeyboardEvent} e
-     */
-    function onKeyDown(e) {
-        if (e.key === 'Tab') {
-            if (e.shiftKey && document.activeElement === first) {
-                e.preventDefault();
-                last.focus();
-            } else if (!e.shiftKey && document.activeElement === last) {
-                e.preventDefault();
-                first.focus();
-            }
-        }
-        if (e.key === 'Escape') {
-            e.preventDefault();
-            closeModal(modal);
-        }
-    }
-
-    trapFocusHandler = onKeyDown;
-    modal.addEventListener('keydown', trapFocusHandler);
-}
-
-/**
- * Réinitialise les messages et états d’erreur des champs.
+ * Réinitialise les messages et états d'erreur des champs.
  * @param {HTMLFormElement} form - Le formulaire.
  * @param {string[]} fieldNames - Liste des noms de champs à réinitialiser.
  */
@@ -153,10 +115,10 @@ function resetFormErrors(form, fieldNames) {
 }
 
 /**
- * Valide un champ et met à jour son message d’erreur et son état.
+ * Valide un champ et met à jour son message d'erreur et son état.
  * @param {HTMLFormElement} form - Le formulaire.
  * @param {string} fieldName - Nom du champ à valider.
- * @param {(value: string) => (string|null)} validator - Retourne un message d’erreur ou null.
+ * @param {(value: string) => (string|null)} validator - Retourne un message d'erreur ou null.
  * @returns {boolean} true si le champ est valide, sinon false.
  */
 function validateField(form, fieldName, validator) {

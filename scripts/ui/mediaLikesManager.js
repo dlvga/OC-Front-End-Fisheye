@@ -1,4 +1,4 @@
-// scripts/ui/likesManager.js
+// scripts/ui/mediaLikesManager.js
 export function initLikes() {
     // Récupère tous les coeurs et compteurs
     const hearts = document.querySelectorAll('.media-card .likes img');

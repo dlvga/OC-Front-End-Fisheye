@@ -6,7 +6,7 @@ import {displayPhotographer} from "../ui/displayPhotographer.js";
 import Photographer from "../models/Photographer.js";
 import {getPhotographerMedia} from "../services/mediaService.js";
 import {displayMedia} from "../ui/displayMedia.js";
-import {initLikes} from "../ui/likesManager.js";
+import {initLikes} from "../ui/mediaLikesManager.js";
 import {initContactForm} from "../utils/contactForm.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
