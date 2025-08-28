@@ -42,9 +42,6 @@ function attachMediaClickListeners(container) {
     mediaLinks.forEach(link => {
         const openFromLink = (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
-            try { link.blur(); } catch(_) {}
             const mediaId = link.closest('.media-card')?.getAttribute('data-id');
             if (mediaId) openLightbox(mediaId);
         };
@@ -249,10 +246,6 @@ function attachLightboxListeners() {
     // Bouton fermer
     const closeBtn = lightboxContainer.querySelector('.lightbox-close');
     closeBtn.addEventListener('click', closeLightbox);
-
-    // Overlay (fermer au clic)
-    const overlay = lightboxContainer.querySelector('.lightbox-overlay');
-    overlay.addEventListener('click', closeLightbox);
 
     // Navigation
     const prevBtn = lightboxContainer.querySelector('.lightbox-prev');

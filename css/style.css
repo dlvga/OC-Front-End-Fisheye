@@ -4,6 +4,7 @@
 @import url('media.css');
 @import url('contact-modal.css');
 @import url('lightbox.css');
+@import url('media-sort.css');
 
 .sr-only {
     position: absolute;

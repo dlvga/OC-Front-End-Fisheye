@@ -8,6 +8,8 @@ import {getPhotographerMedia} from "../services/mediaService.js";
 import {displayMedia} from "../ui/displayMedia.js";
 import {initLikes} from "../ui/mediaLikesManager.js";
 import {initContactForm} from "../utils/contactForm.js";
+import {initMediaLightbox} from "../ui/mediaLightboxManager.js";
+import {initMediaSort} from "../ui/mediaSortManager.js";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const photographerId = new URLSearchParams(window.location.search).get('id');
@@ -34,8 +36,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('photographer-price').textContent = photographerModel._price;
         // Display the photographer's media
         displayMedia(photographerMedia, mediaSection);
-        // Update the total likes count
+
+        // Initialiser le tri (qui gère aussi l'affichage initial)
+        initMediaSort(photographerMedia, mediaSection);
+
+        // Initialiser les likes après l'affichage des médias
         initLikes();
+
     } catch (error) {
         console.error("Erreur lors de la récupération du photographe :", error);
         displayError(errorContainer, error);

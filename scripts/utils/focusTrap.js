@@ -104,28 +104,6 @@ export function createFocusTrap(container, options = {}) {
     };
 }
 
-/**
- * Utilitaire pour donner le focus au premier élément focusable d'un container
- * @param {HTMLElement} container - Container dans lequel chercher
- * @param {number} delay - Délai optionnel avant de donner le focus (pour les transitions)
- */
-export function focusFirstElement(container, delay = 0) {
-    const focusableElements = getFocusableElements(container);
-
-    if (!focusableElements.length) return;
-
-    const firstElement = focusableElements[0];
-
-    if (delay > 0) {
-        setTimeout(() => {
-            if (firstElement && document.contains(firstElement)) {
-                firstElement.focus();
-            }
-        }, delay);
-    } else {
-        firstElement.focus();
-    }
-}
 
 /**
  * Utilitaire pour donner le focus à un élément spécifique

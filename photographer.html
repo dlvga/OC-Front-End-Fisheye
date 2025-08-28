@@ -18,6 +18,19 @@
         <main id="main">
             <!-- Sections dynamiquement remplies par JavaScript -->
             <section class="photographer-header"></section>
+            <!-- Sélecteur de tri -->
+            <section class="media-sort-container" aria-labelledby="sort-heading">
+                <h2 id="sort-heading" class="sr-only">Options de tri des médias</h2>
+                <fieldset class="media-sort-fieldset">
+                    <legend class="sr-only">Trier les médias par</legend>
+                    <label for="media-sort">Trier par :</label>
+                    <select id="media-sort" class="media-sort-select">
+                        <option value="popularity">Popularité</option>
+                        <option value="date">Date</option>
+                        <option value="title">Titre</option>
+                    </select>
+                </fieldset>
+            </section>
             <section class="photographer-media">
                 <h2 class="sr-only">Galerie du photographe</h2>
             </section>

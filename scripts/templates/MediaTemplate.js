@@ -10,7 +10,8 @@ export class MediaTemplate {
         this.media = media;
     }
 
-    _createMediaCard() {
+    // Méthode privée pour créer la carte média (#)
+    #createMediaCard() {
         const article = createElement('article', {
             className: 'media-card',
             attrs: {
@@ -76,5 +77,10 @@ export class MediaTemplate {
 
         article.append(mediaLink, footer);
         return article;
+    }
+
+    // Méthode publique qui utilise la méthode privée
+    renderMediaCard() {
+        return this.#createMediaCard();
     }
 }
