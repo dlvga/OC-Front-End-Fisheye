@@ -1,7 +1,5 @@
 import { sortMedia } from '../utils/mediaSorter.js';
-import { displayMedia } from './displayMedia.js';
 import {initMediaLightbox} from "./mediaLightboxManager.js";
-import {initLikes} from "./mediaLikesManager.js";
 
 let originalMediaArray = [];
 let currentSortCriterion = 'popularity';
