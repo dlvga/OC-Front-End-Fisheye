@@ -33,14 +33,3 @@ export function sortMedia(mediaArray, sortBy) {
             return sortedArray;
     }
 }
-
-/**
- * Retourne les options de tri disponibles
- */
-export function getSortOptions() {
-    return [
-        { value: 'popularity', label: 'Popularité' },
-        { value: 'date', label: 'Date' },
-        { value: 'title', label: 'Titre' }
-    ];
-}

@@ -1,16 +1,24 @@
-/* =============================
-   TRI DES MÉDIAS - SELECT CUSTOM
-   ============================= */
+/* Accessibilité */
+.sr-only {
+    position: absolute;
+    left: -9999px;
+}
 
-/* Container */
+/* Layout général */
 .media-sort-container {
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-family: "Arial", sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 1rem;
-    font-weight: 600;
     margin: 30px 100px 0;
+}
+
+.media-sort-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    height: 50px;
 }
 
 /* Label */
@@ -18,52 +26,87 @@
     font-weight: bold;
 }
 
-.media-sort-fieldset {
-    border: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Select wrapper */
-.media-sort-select {
-    appearance: none;       /* supprime le style natif */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    background-color: #901C1C; /* bordeaux */
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 0.8rem 2.5rem 0.8rem 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    position: relative;
-    width: 150px;
-}
-
-/* Icône flèche personnalisée */
-.media-sort-select {
-    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 0.8rem center;
-    background-size: 1rem;
-}
-
-/* Focus */
-.media-sort-select:focus {
-    outline: 2px solid #555;
-}
-
-/* Options */
-.media-sort-select option {
+/* Bouton déclencheur du menu */
+.media-sort-trigger {
     background-color: #901C1C;
     color: #fff;
-    padding: 0.6rem;
-    border-bottom: 1px solid #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem 2.5rem 1rem 1rem;
+    cursor: pointer;
+    position: relative;
+    font-size: 1.2rem;
+    width: 150px;
+    text-align: left;
 }
 
-/* Supprime la bordure du dernier */
-.media-sort-select option:last-child {
-    border-bottom: none;
+/* Chevron flèche */
+.media-sort-trigger .chevron {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translateY(-50%) rotate(45deg);
+    transition: transform 0.3s ease;
+}
+
+.media-sort-trigger[aria-expanded="true"] .chevron {
+    transform: translateY(-50%) rotate(-135deg);
+}
+
+/* Liste déroulante */
+.media-sort-list {
+    margin-top: 0.3rem;
+    padding: 0;
+    list-style: none;
+    background-color: #901C1C;
+    color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 150px;
+    position: relative;
+    z-index: 1000;
+    top: -60px;
+    left: 78px;
+}
+
+.media-sort-list li {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    position: relative;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    padding-left: 20px;
+}
+
+.media-sort-list li .chevron {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: translateY(-50%) rotate(-135deg);
+}
+
+.media-sort-list li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 125px;
+    height: 1px;
+    background-color: white;
+}
+
+.media-sort-list li[aria-selected="true"] {
+    background-color: #6d1515;
 }

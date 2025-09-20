@@ -23,14 +23,34 @@
                 <h2 id="sort-heading" class="sr-only">Options de tri des médias</h2>
                 <fieldset class="media-sort-fieldset">
                     <legend class="sr-only">Trier les médias par</legend>
-                    <label for="media-sort">Trier par :</label>
-                    <select id="media-sort" class="media-sort-select">
-                        <option value="popularity">Popularité</option>
-                        <option value="date">Date</option>
-                        <option value="title">Titre</option>
-                    </select>
+                    <label id="media-sort-label" for="media-sort-button">Trier par :</label>
+
+                    <!-- Bouton qui agit comme un <select> -->
+                    <button
+                            id="media-sort-button"
+                            class="media-sort-trigger"
+                            role="button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-labelledby="media-sort-label media-sort-button">
+                        Popularité
+                        <span class="chevron" aria-hidden="true"></span>
+                    </button>
+
+                    <!-- Liste déroulante -->
+                    <ul
+                            class="media-sort-list"
+                            role="listbox"
+                            aria-labelledby="media-sort-label"
+                            tabindex="-1"
+                            hidden>
+                        <li role="option" tabindex="0" aria-selected="true">Popularité <span class="chevron" aria-hidden="true"></span></li>
+                        <li role="option" tabindex="-1" aria-selected="false">Date</li>
+                        <li role="option" tabindex="-1" aria-selected="false">Titre</li>
+                    </ul>
                 </fieldset>
             </section>
+
             <section class="photographer-media">
                 <h2 class="sr-only">Galerie du photographe</h2>
             </section>
@@ -273,6 +293,7 @@
 
         <!-- Scripts modules pour l'interactivité -->
         <script type="module" src="scripts/pages/photographer.js"></script>
-        <script type="module" src="scripts/utils/contactForm.js"></script>
+        <script type="module" src="scripts/ui/contactForm.js"></script>
+        <script type="module" src="scripts/ui/mediaSortManager.js"></script>
     </body>
 </html>
