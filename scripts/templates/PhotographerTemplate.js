@@ -1,4 +1,4 @@
-import { createElement } from "../utils/domUtils.js";
+import {createElement} from "../utils/domUtils.js";
 import Photographer from "../models/Photographer.js";
 
 export class PhotographerTemplate {
@@ -50,7 +50,7 @@ export class PhotographerTemplate {
         return profileLink;
     }
 
-    _createProfileInfo({ id, name, location, tagline, price }) {
+    _createProfileInfo({ id, location, tagline, price }) {
         const infoSection = createElement('section', {
             className: 'profile-info',
             attrs: { 'aria-labelledby': `${id}-name` }

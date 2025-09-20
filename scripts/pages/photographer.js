@@ -1,13 +1,13 @@
 // scripts/pages/photographer.js
 
-import { displayError } from '../utils/displayError.js';
+import {displayError} from '../utils/displayError.js';
 import {getPhotographer} from "../services/photographerService.js";
 import {displayPhotographer} from "../ui/displayPhotographer.js";
 import Photographer from "../models/Photographer.js";
 import {getPhotographerMedia} from "../services/mediaService.js";
 import {displayMedia} from "../ui/displayMedia.js";
 import {initLikes} from "../ui/mediaLikesManager.js";
-import {initContactForm} from "../utils/contactForm.js";
+import {initContactForm} from "../ui/contactForm.js";
 import {initMediaSort} from "../ui/mediaSortManager.js";
 
 document.addEventListener('DOMContentLoaded', async () => {

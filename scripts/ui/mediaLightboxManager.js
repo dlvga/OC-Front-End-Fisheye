@@ -1,5 +1,5 @@
 // scripts/ui/mediaLightboxManager.js
-import { createElement } from "../utils/domUtils.js";
+import {createElement} from "../utils/domUtils.js";
 import MediaFactory from "../factories/MediaFactory.js";
 import {createFocusTrap, focusElement} from "../utils/focusTrap.js";
 
@@ -228,7 +228,7 @@ function closeLightbox() {
     const fallback = document.querySelector('body > header a') || document.getElementById('main') || document.body;
     const target = (lastFocusedElement && document.contains(lastFocusedElement)) ? lastFocusedElement : fallback;
     if (target && typeof target.focus === 'function') {
-        try { target.focus({ preventScroll: true }); } catch(_) { target.focus(); }
+        try { target.focus({ preventScroll: true }); } catch { target.focus(); }
     }
 
     // 5) Cacher la lightbox (après avoir déplacé le focus hors de celle-ci)
@@ -254,27 +254,6 @@ function attachLightboxListeners() {
     prevBtn.addEventListener('click', goToPreviousMedia);
     nextBtn.addEventListener('click', goToNextMedia);
 }
-
-/**
- * Masque/affiche le contenu principal (accessibilité)
- */
-/*function toggleMainContentVisibility(hide) {
-    const main = document.getElementById('main');
-    const header = document.querySelector('body > header');
-    const stats = document.querySelector('.photographer-stats');
-
-    [main, header, stats].forEach(element => {
-        if (!element) return;
-        if (hide) {
-            element.setAttribute('aria-hidden', 'true');
-            // Empêche tout focus et interaction
-            try { element.inert = true; } catch(_) {}
-        } else {
-            element.removeAttribute('aria-hidden');
-            try { element.inert = false; } catch(_) {}
-        }
-    });
-}*/
 
 function toggleMainContentVisibility(hide) {
     const main = document.getElementById('main');

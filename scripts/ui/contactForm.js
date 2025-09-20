@@ -5,7 +5,7 @@
  * Conçu pour respecter les bonnes pratiques d'accessibilité
  */
 
-import { createFocusTrap, focusElement, restoreFocus } from './focusTrap.js';
+import {createFocusTrap, focusElement, restoreFocus} from '../utils/focusTrap.js';
 
 const MODAL_ID = 'contact_modal';
 const NAME_SPAN_ID = 'contact_modal_photographer_name';

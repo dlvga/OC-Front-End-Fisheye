@@ -15,16 +15,12 @@ export default class DataService {
     async fetchData() {
         if (this._dataLoaded) return;
 
-        try {
-            const response = await fetch("https://raw.githubusercontent.com/dlvga/OC-Front-End-Fisheye/refs/heads/main/data/photographers.json");
-            const data = await response.json();
+        const response = await fetch("https://raw.githubusercontent.com/dlvga/OC-Front-End-Fisheye/refs/heads/main/data/photographers.json");
+        const data = await response.json();
 
-            this._photographers = data.photographers;
-            this._media = data.media;
-            this._dataLoaded = true;
-        } catch (error) {
-            throw error;
-        }
+        this._photographers = data.photographers;
+        this._media = data.media;
+        this._dataLoaded = true;
     }
 
     getPhotographers() {

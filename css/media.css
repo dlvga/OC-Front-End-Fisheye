@@ -1,8 +1,4 @@
 .photographer-media {
-    /*display: flex;
-    flex-wrap: wrap;
-    margin: 30px 100px 30px;
-    justify-content: space-between;*/
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
@@ -15,7 +11,6 @@
     align-items: center;
     background-color: #fff;
     border-radius: 5px;
-    /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);*/
     padding: 20px;
     text-align: center;
 }
@@ -39,7 +34,7 @@
 
 .media-footer h2 {
     font-size: 24px;
-    color: #e37070;
+    color: #901C1C;
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
