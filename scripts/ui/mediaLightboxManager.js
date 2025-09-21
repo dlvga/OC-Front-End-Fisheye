@@ -117,7 +117,6 @@ function openLightbox(mediaId) {
  */
 function displayCurrentMedia() {
     const mediaContainer = lightboxContainer.querySelector('.lightbox-media-container');
-    const titleElement = lightboxContainer.querySelector('.lightbox-title');
 
     // Vider le container (approche dynamique)
     mediaContainer.innerHTML = '';
@@ -151,6 +150,20 @@ function displayCurrentMedia() {
 
     // Injecter le média et le titre
     mediaContainer.appendChild(mediaElement);
+    // Créer le footer avec titre
+    const footerElement = createElement('div', {
+        className: 'lightbox-footer'
+    });
+
+    const titleElement = createElement('h2', {
+        className: 'lightbox-title',
+        attrs: {
+            id: 'lightbox-title'
+        }
+    });
+
+    footerElement.appendChild(titleElement);
+    mediaContainer.appendChild(footerElement);
     titleElement.textContent = mediaModel._title;
 }
 

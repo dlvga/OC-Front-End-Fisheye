@@ -1,4 +1,4 @@
-import { createElement } from "../utils/domUtils.js";
+import {createElement} from "../utils/domUtils.js";
 import VideoMedia from "../models/VideoMedia.js";
 import ImageMedia from "../models/ImageMedia.js";
 
@@ -49,7 +49,7 @@ export class MediaTemplate {
 
         mediaLink.appendChild(mediaEl);
 
-        // Title + likes
+        // Titre + likes
         const footer = createElement('footer', { className: 'media-footer' });
 
         const title = createElement('h2', {

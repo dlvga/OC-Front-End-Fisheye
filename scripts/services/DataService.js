@@ -27,7 +27,6 @@ export default class DataService {
         return this._photographers;
     }
 
-    // TODO : handle case where photographer is not found
     getPhotographerById(id) {
         return this._photographers.find(photographer => photographer.id === id);
     }

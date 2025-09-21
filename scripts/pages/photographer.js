@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             displayError(errorContainer, "Aucun média trouvé pour ce photographe.");
             return;
         }
-        // Display the photographer's price
+        // Tarif du photographe
         document.getElementById('photographer-price').textContent = photographerModel._price;
-        // Display the photographer's media
+        // Affiche le media du photographe
         displayMedia(photographerMedia, mediaSection);
 
         // Initialiser le tri (qui gère aussi l'affichage initial)

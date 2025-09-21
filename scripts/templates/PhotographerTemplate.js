@@ -24,7 +24,7 @@ export class PhotographerTemplate {
         const img = createElement('img', {
             attrs: {
                 src: data.profilePicture,
-                //tabindex: '0',
+                alt: data.name,
                 role: 'img'
             }
         });
@@ -59,19 +59,16 @@ export class PhotographerTemplate {
         const locationEl = createElement('p', {
             className: 'location',
             text: location,
-            //attrs: { tabindex: '0' }
         });
 
         const quoteEl = createElement('p', {
             className: 'quote',
             text: tagline,
-            // attrs: { tabindex: '0' }
         });
 
         const rateEl = createElement('p', {
             className: 'rate',
             text: price,
-            //attrs: { tabindex: '0' }
         });
 
         infoSection.append(locationEl, quoteEl, rateEl);
@@ -84,7 +81,6 @@ export class PhotographerTemplate {
         const article = createElement('article', {
             className: 'profile-card',
             attrs: {
-                //tabindex: '0',
                 role: 'region'
             }
         });
@@ -95,7 +91,7 @@ export class PhotographerTemplate {
         return article;
     }
 
-// Photographer header creation
+// Creation du header du photographe
 
     _createContactButton() {
         return createElement('button', {
