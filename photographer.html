@@ -29,7 +29,6 @@
                     <button
                             id="media-sort-button"
                             class="media-sort-trigger"
-                            role="button"
                             aria-haspopup="listbox"
                             aria-expanded="false"
                             aria-labelledby="media-sort-label media-sort-button">
@@ -149,7 +148,7 @@
 
                 <!--
                 CHAMP EMAIL avec type spécifique
-                - type="email" : Validation native et clavier adapté sur mobile
+                - type="email" : Validation native
                 -->
                 <div class="form-field">
                     <label for="email">Email</label>
@@ -168,7 +167,6 @@
                 <!--
                 TEXTAREA ACCESSIBLE
                 - Même attributs d'accessibilité que les inputs
-                - Pas de placeholder qui pourrait masquer le label
                 -->
                 <div class="form-field">
                     <label for="message">Votre message</label>
@@ -207,12 +205,10 @@
         STATISTIQUES DU PHOTOGRAPHE - ACCESSIBILITÉ SÉMANTIQUE
         - aside : Contenu complémentaire sémantiquement distinct
         - aria-label : Description du contenu pour les lecteurs d'écran
-        - Structure dl/dt/dd : Liste de définitions sémantiquement correcte
         -->
         <aside class="photographer-stats" aria-label="Statistiques du photographe">
             <dl>
                 <!-- Groupe likes avec sémantique claire -->
-                <div class="likes-count">
                     <dt>
                         <!-- sr-only : Texte caché visuellement mais lu par les lecteurs d'écran -->
                         <span class="sr-only">Nombre total de likes</span>
@@ -222,25 +218,22 @@
                         <!--
                         ICÔNE ACCESSIBLE
                         - alt="likes" : Description de l'icône
-                        - tabindex="0" : Rend l'icône focusable au clavier (questionnable)
+                        - tabindex="0" : Rend l'icône focusable au clavier
                         -->
                         <img src="assets/icons/likes-black.svg" alt="likes" tabindex="0" />
                     </dd>
-                </div>
 
                 <!-- Groupe prix avec structure similaire -->
-                <div class="photographer-price">
                     <dt>
                         <span class="sr-only">Tarif journalier</span>
                     </dt>
                     <dd>
                         <span id="photographer-price">0</span> €/jour
                     </dd>
-                </div>
             </dl>
         </aside>
 
-        <!-- LIGHTBOX STRUCTURE - Position optimale dans le DOM -->
+        <!-- LIGHTBOX STRUCTURE -->
         <div id="lightbox-modal"
              class="lightbox-modal"
              role="dialog"
@@ -248,7 +241,6 @@
              aria-labelledby="lightbox-title"
              aria-hidden="true">
 
-            <!-- Overlay pour fermer au clic -->
             <div class="lightbox-overlay"></div>
 
             <!-- Contenu de la lightbox -->
@@ -260,6 +252,9 @@
                             type="button"
                             aria-label="Fermer la visionneuse">×</button>
                 </div>
+
+                <!-- Titre caché pour l'accessibilité -->
+                <h2 id="lightbox-title" class="sr-only">Détail du média</h2>
 
                 <!-- Container pour le média (CONTENU DYNAMIQUE) -->
                 <div class="lightbox-media-container">
@@ -282,9 +277,6 @@
             </div>
         </div>
 
-        <!-- Scripts modules pour l'interactivité -->
         <script type="module" src="scripts/pages/photographer.js"></script>
-        <script type="module" src="scripts/ui/contactForm.js"></script>
-        <script type="module" src="scripts/ui/mediaSortManager.js"></script>
     </body>
 </html>

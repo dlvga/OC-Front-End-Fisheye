@@ -1,135 +1,159 @@
-// scripts/ui/mediaLightboxManager.js
+/**
+ * Gestionnaire de la lightbox pour l'affichage des médias en plein écran
+ * Gère la navigation clavier, le focus trap et l'accessibilité ARIA
+ */
+
 import {createElement} from "../utils/domUtils.js";
 import MediaFactory from "../factories/MediaFactory.js";
-import {createFocusTrap, focusElement} from "../utils/focusTrap.js";
+import {createFocusTrap, focusElement, restoreFocus} from "../utils/focusTrap.js";
 
-let currentMediaIndex = 0;
-let mediaArray = [];
-let lightboxContainer = null;
-let lastFocusedElement = null;
-let focusTrapCleanup = null;
+// Variables globales pour l'état de la lightbox
+let currentMediaIndex = 0;           // Index du média actuellement affiché
+let mediaArray = [];                 // Copie du tableau des médias pour la navigation
+let lightboxContainer = null;        // Référence au container de la lightbox
+let lastFocusedElement = null;       // Élément ayant le focus avant ouverture
+let focusTrapCleanup = null;         // Fonction de nettoyage du focus trap
 
 /**
- * Initialise la lightbox pour les médias
- * @param {HTMLElement} container - Container des cartes médias
- * @param {Array} photographerMedia - Données des médias du photographe
+ * Initialise la lightbox pour une collection de médias
+ * Configure les event listeners et prépare la navigation
+ * @param {HTMLElement} mediaContainer - Container contenant les cartes médias
+ * @param {Array} photographerMedia - Tableau des données des médias
  */
-export function initMediaLightbox(container, photographerMedia) {
-    // Stocker les données des médias
+export function initMediaLightbox(mediaContainer, photographerMedia) {
+    // Stockage local des données pour la navigation entre médias
     mediaArray = photographerMedia;
 
-    // Récupérer la lightbox existante du HTML
+    // Récupération de l'élément lightbox depuis le HTML statique
     lightboxContainer = document.getElementById('lightbox-modal');
 
     if (!lightboxContainer) {
-        console.error('Lightbox container not found in HTML');
+        console.error('Lightbox: Container non trouvé dans le DOM');
         return;
     }
 
-    // Ajouter les event listeners sur les liens des médias
-    attachMediaClickListeners(container);
+    // Configuration des écouteurs d'événements sur les liens des médias
+    attachMediaClickListeners(mediaContainer);
 
-    // Attacher les event listeners de la lightbox
+    // Configuration des contrôles internes de la lightbox
     attachLightboxListeners();
 }
 
 /**
- * Ajoute les event listeners sur les liens des médias
+ * Attache les event listeners sur tous les liens de médias pour l'ouverture
+ * Gère les clics, les événements clavier et les interactions tactiles
+ * @param {HTMLElement} mediaContainer - Container des cartes médias
  */
-function attachMediaClickListeners(container) {
-    const mediaLinks = container.querySelectorAll('.media-link');
+function attachMediaClickListeners(mediaContainer) {
+    const allMediaLinks = mediaContainer.querySelectorAll('.media-link');
 
-    mediaLinks.forEach(link => {
-        const openFromLink = (e) => {
-            e.preventDefault();
-            const mediaId = link.closest('.media-card')?.getAttribute('data-id');
-            if (mediaId) openLightbox(mediaId);
+    allMediaLinks.forEach(mediaLink => {
+        /**
+         * Gestionnaire unifié pour l'ouverture de la lightbox
+         * @param {Event} triggerEvent - Événement déclencheur
+         */
+        const handleLightboxOpen = (triggerEvent) => {
+            triggerEvent.preventDefault();
+
+            // Récupération de l'ID du média depuis l'attribut data-id de la carte parente
+            const mediaCard = mediaLink.closest('.media-card');
+            const mediaId = mediaCard?.getAttribute('data-id');
+
+            if (mediaId) {
+                openLightbox(mediaId);
+            }
         };
-        link.addEventListener('pointerdown', openFromLink);
-        link.addEventListener('mousedown', openFromLink);
-        link.addEventListener('click', openFromLink);
-        link.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                openFromLink(e);
+
+        // Événements
+        mediaLink.addEventListener('click', handleLightboxOpen);
+
+        // Navigation clavier (Entrée et Espace)
+        mediaLink.addEventListener('keydown', (keyboardEvent) => {
+            if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+                handleLightboxOpen(keyboardEvent);
             }
         });
     });
 }
 
 /**
- * Ouvre la lightbox avec le média spécifié
- * @param {string} mediaId - ID du média à afficher
+ * Ouvre la lightbox avec le média spécifié par son ID
+ * @param {string} mediaId - Identifiant unique du média à afficher
  */
 function openLightbox(mediaId) {
-    console.log('🔥 openLightbox called with ID:', mediaId);
 
-    // Trouver l'index du média dans le tableau
+    // Recherche de l'index du média dans le tableau pour la navigation
     currentMediaIndex = mediaArray.findIndex(media => media.id === parseInt(mediaId));
 
-    if (currentMediaIndex === -1) return;
+    // Vérification de la validité de l'ID
+    if (currentMediaIndex === -1) {
+        console.warn('Média non trouvé:', mediaId);
+        return;
+    }
 
-    // Sauvegarder le focus actuel
+    // Sauvegarde de l'élément ayant le focus pour restauration à la fermeture
     lastFocusedElement = document.activeElement;
-    console.log('💾 Saved focus element:', lastFocusedElement);
 
-    // Afficher la lightbox et supprimer aria-hidden (au lieu de le mettre à "false")
+    // Affichage de la lightbox (classes CSS et attributs ARIA)
     lightboxContainer.classList.add('visible');
     lightboxContainer.removeAttribute('aria-hidden');
-    console.log('👁️ Lightbox made visible');
 
-    // Afficher le média actuel (DYNAMIQUE)
+    // Génération dynamique du contenu média
     displayCurrentMedia();
 
-    // Empêcher le scroll
+    // Prévention du scroll de la page en arrière-plan
     document.body.style.overflow = 'hidden';
 
-    // 1) Retirer explicitement le focus de l'élément déclencheur
+    // Gestion séquentielle du focus pour éviter les conflits d'animation
+    // 1) Retrait du focus de l'élément déclencheur
     if (lastFocusedElement && typeof lastFocusedElement.blur === 'function') {
         lastFocusedElement.blur();
     }
 
-    // 2) Focaliser le bouton Close dans la prochaine frame, puis masquer le contenu principal
-    // Rendre le container focusable et lui donner le focus immédiatement
+    // 2) Focus temporaire sur le container lightbox pour stabiliser l'état
     if (!lightboxContainer.hasAttribute('tabindex')) {
         lightboxContainer.setAttribute('tabindex', '-1');
     }
     lightboxContainer.focus({ preventScroll: true });
 
-    const closeBtn = lightboxContainer.querySelector('.lightbox-close');
-    if (closeBtn) {
-        //Délai pour laisser le temps au focus de se stabiliser à cause des animations
-        focusElement(closeBtn, lightboxContainer, 150)
+    // 3) Focus sur le bouton fermer avec délai pour les animations CSS
+    const closeButton = lightboxContainer.querySelector('.lightbox-close');
+    if (closeButton) {
+        // Délai de 150ms pour laisser les animations se stabiliser
+        focusElement(closeButton, lightboxContainer, 150);
     } else {
+        // Si pas de bouton fermer, masquer immédiatement le contenu principal
         toggleMainContentVisibility(true);
     }
 
-    // Utiliser l'utilitaire focusTrap avec support des flèches
+    // 4) Activation du focus trap avec gestion des raccourcis clavier
     focusTrapCleanup = createFocusTrap(lightboxContainer, {
         onEscape: closeLightbox,
         onArrowLeft: goToPreviousMedia,
         onArrowRight: goToNextMedia
     });
-    console.log('🔒 Focus trap created');
 }
 
 /**
- * Affiche dynamiquement le média actuel dans la lightbox
+ * Met à jour dynamiquement le contenu de la lightbox avec le média actuel
+ * Utilise le Factory Pattern pour créer le bon type d'élément (image/vidéo)
  */
 function displayCurrentMedia() {
-    const mediaContainer = lightboxContainer.querySelector('.lightbox-media-container');
+    const mediaContentContainer = lightboxContainer.querySelector('.lightbox-media-container');
 
-    // Vider le container (approche dynamique)
-    mediaContainer.innerHTML = '';
+    // Nettoyage du contenu précédent
+    mediaContentContainer.innerHTML = '';
 
-    // Récupérer les données du média actuel
+    // Récupération des données du média à afficher
     const currentMediaData = mediaArray[currentMediaIndex];
 
-    // Créer l'instance du média via la Factory
+    // Création de l'instance média via la Factory (gère images et vidéos)
     const mediaModel = new MediaFactory(currentMediaData);
 
-    // Créer l'élément média approprié
+    // Génération de l'élément DOM approprié selon le type de média
     let mediaElement;
     if (mediaModel._image) {
+        // Élément image avec attributs d'accessibilité
         mediaElement = createElement('img', {
             className: 'lightbox-image',
             attrs: {
@@ -138,6 +162,7 @@ function displayCurrentMedia() {
             }
         });
     } else {
+        // Élément vidéo avec contrôles natifs
         mediaElement = createElement('video', {
             className: 'lightbox-video',
             attrs: {
@@ -148,134 +173,152 @@ function displayCurrentMedia() {
         });
     }
 
-    // Injecter le média et le titre
-    mediaContainer.appendChild(mediaElement);
-    // Créer le footer avec titre
-    const footerElement = createElement('div', {
+    // Injection de l'élément média
+    mediaContentContainer.appendChild(mediaElement);
+
+    // Création du footer avec le titre du média
+    const mediaFooter = createElement('div', {
         className: 'lightbox-footer'
     });
 
-    const titleElement = createElement('h2', {
+    const mediaTitle = createElement('h2', {
         className: 'lightbox-title',
         attrs: {
             id: 'lightbox-title'
         }
     });
 
-    footerElement.appendChild(titleElement);
-    mediaContainer.appendChild(footerElement);
-    titleElement.textContent = mediaModel._title;
+    mediaFooter.appendChild(mediaTitle);
+    mediaContentContainer.appendChild(mediaFooter);
+
+    // Injection du titre
+    mediaTitle.textContent = mediaModel._title;
 }
 
 /**
- * Navigation vers le média précédent
+ * Navigue vers le média précédent dans la collection
+ * Gère le bouclage (retour au dernier média depuis le premier)
  */
 function goToPreviousMedia() {
     if (currentMediaIndex > 0) {
         currentMediaIndex--;
     } else {
-        currentMediaIndex = mediaArray.length - 1; // Boucle au dernier média
+        // Bouclage : du premier vers le dernier média
+        currentMediaIndex = mediaArray.length - 1;
     }
+
+    // Mise à jour de l'affichage avec le nouveau média
     displayCurrentMedia();
 
-    // Refocus sur le bouton de navigation si nécessaire
+    // Maintien du focus approprié après navigation
     refocusAfterNavigation();
 }
 
 /**
- * Navigation vers le média suivant
+ * Navigue vers le média suivant dans la collection
+ * Gère le bouclage (retour au premier média depuis le dernier)
  */
 function goToNextMedia() {
     if (currentMediaIndex < mediaArray.length - 1) {
         currentMediaIndex++;
     } else {
-        currentMediaIndex = 0; // Boucle au premier média
+        // Bouclage : du dernier vers le premier média
+        currentMediaIndex = 0;
     }
+
+    // Mise à jour de l'affichage avec le nouveau média
     displayCurrentMedia();
 
-    // Refocus sur le bouton de navigation si nécessaire
+    // Maintien du focus approprié après navigation
     refocusAfterNavigation();
 }
 
 /**
- * Remet le focus sur un élément approprié après navigation
+ * Gère le focus après navigation entre médias
+ * Maintient l'élément focalisé ou retourne sur le bouton fermer
  */
 function refocusAfterNavigation() {
-    // Si le focus était sur un bouton de navigation, le maintenir
-    const activeElement = document.activeElement;
-    if (activeElement && (
-        activeElement.classList.contains('lightbox-prev') ||
-        activeElement.classList.contains('lightbox-next')
+    const currentlyFocusedElement = document.activeElement;
+
+    // Si le focus est sur un bouton de navigation, le conserver
+    if (currentlyFocusedElement && (
+        currentlyFocusedElement.classList.contains('lightbox-prev') ||
+        currentlyFocusedElement.classList.contains('lightbox-next')
     )) {
-        // Le focus reste sur le bouton actuel
+        // Le focus reste sur le bouton de navigation actuellement utilisé
         return;
     }
 
-    // Sinon, remettre le focus sur le bouton fermer
-    const closeBtn = lightboxContainer.querySelector('.lightbox-close');
-    if (closeBtn) {
-        closeBtn.focus();
+    // Sinon, replacer le focus sur le bouton fermer par défaut
+    const closeButton = lightboxContainer.querySelector('.lightbox-close');
+    if (closeButton) {
+        closeButton.focus();
     }
 }
 
 /**
- * Ferme la lightbox
+ * Ferme la lightbox et restaure l'état initial de la page
+ * Suit un ordre précis pour éviter les problèmes de focus
  */
 function closeLightbox() {
-    // 1) Retirer le focus trap d'abord
+    // 1) Désactivation du focus trap en premier pour libérer la navigation
     if (focusTrapCleanup) {
         focusTrapCleanup();
         focusTrapCleanup = null;
     }
 
-    // 2) Si un élément à l'intérieur de la lightbox a le focus, l'enlever
-    const active = document.activeElement;
-    if (active && lightboxContainer.contains(active) && typeof active.blur === 'function') {
-        active.blur();
+    // 2) Retrait du focus des éléments internes à la lightbox
+    const currentActiveElement = document.activeElement;
+    if (currentActiveElement && lightboxContainer.contains(currentActiveElement) && typeof currentActiveElement.blur === 'function') {
+        currentActiveElement.blur();
     }
 
-    // 3) Réafficher le contenu principal (retire aria-hidden/inert)
+    // 3) Réaffichage du contenu principal (suppression d'aria-hidden)
     toggleMainContentVisibility(false);
 
-    // 4) Restaurer le focus sur l'élément précédent (ou un fallback sûr)
-    const fallback = document.querySelector('body > header a') || document.getElementById('main') || document.body;
-    const target = (lastFocusedElement && document.contains(lastFocusedElement)) ? lastFocusedElement : fallback;
-    if (target && typeof target.focus === 'function') {
-        try { target.focus({ preventScroll: true }); } catch { target.focus(); }
-    }
+    // 4) Restauration du focus sur l'élément d'origine ou un fallback sûr
+    restoreFocus(lastFocusedElement);
 
-    // 5) Cacher la lightbox (après avoir déplacé le focus hors de celle-ci)
+    // 5) Masquage de la lightbox (après déplacement du focus hors de celle-ci)
     lightboxContainer.classList.remove('visible');
     lightboxContainer.setAttribute('aria-hidden', 'true');
 
-    // 6) Restaurer le scroll
+    // 6) Restauration du scroll normal de la page
     document.body.style.overflow = '';
 }
 
 /**
- * Ajoute tous les event listeners de la lightbox
+ * Configure tous les event listeners internes de la lightbox
+ * Attache les gestionnaires pour la fermeture et la navigation
  */
 function attachLightboxListeners() {
-    // Bouton fermer
-    const closeBtn = lightboxContainer.querySelector('.lightbox-close');
-    closeBtn.addEventListener('click', closeLightbox);
+    // Bouton de fermeture
+    const closeButton = lightboxContainer.querySelector('.lightbox-close');
+    closeButton.addEventListener('click', closeLightbox);
 
-    // Navigation
-    const prevBtn = lightboxContainer.querySelector('.lightbox-prev');
-    const nextBtn = lightboxContainer.querySelector('.lightbox-next');
+    // Boutons de navigation précédent/suivant
+    const previousButton = lightboxContainer.querySelector('.lightbox-prev');
+    const nextButton = lightboxContainer.querySelector('.lightbox-next');
 
-    prevBtn.addEventListener('click', goToPreviousMedia);
-    nextBtn.addEventListener('click', goToNextMedia);
+    previousButton.addEventListener('click', goToPreviousMedia);
+    nextButton.addEventListener('click', goToNextMedia);
 }
 
-function toggleMainContentVisibility(hide) {
-    const main = document.getElementById('main');
-    const header = document.querySelector('body > header');
-    const stats = document.querySelector('.photographer-stats');
+/**
+ * Masque ou affiche le contenu principal via aria-hidden
+ * Nécessaire pour l'accessibilité lors de l'ouverture de la lightbox
+ * @param {boolean} shouldHide - true pour masquer, false pour afficher
+ */
+function toggleMainContentVisibility(shouldHide) {
+    // Éléments principaux de la page à masquer/afficher
+    const mainContent = document.getElementById('main');
+    const pageHeader = document.querySelector('body > header');
+    const photographerStats = document.querySelector('.photographer-stats');
 
-    [main, header, stats].forEach(element => {
+    // Application de l'état aria-hidden sur tous les éléments
+    [mainContent, pageHeader, photographerStats].forEach(element => {
         if (element) {
-            if (hide) {
+            if (shouldHide) {
                 element.setAttribute('aria-hidden', 'true');
             } else {
                 element.removeAttribute('aria-hidden');

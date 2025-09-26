@@ -49,3 +49,8 @@
     font-weight: 500;
     color: #888;
 }
+
+.media-link:focus {
+    outline: 2px solid #d45d42;
+    outline-offset: 2px;
+}
